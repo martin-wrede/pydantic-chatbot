@@ -1,0 +1,15 @@
+# Pydantic AI requirements
+pydantic>=2.10.6
+pydantic-ai>=0.0.36
+
+# Shopify API
+ShopifyAPI>=12.7.0
+
+# Anthropic (for Claude 3.7)
+anthropic>=0.49.0
+
+# Environment variable loading
+python-dotenv>=1.0.1
+
+# Botocore version compatible with aiobotocore
+botocore>=1.34.41,<1.34.70
