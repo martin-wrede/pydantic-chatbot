@@ -4,6 +4,7 @@ import asyncio
 import openai
 from dotenv import load_dotenv
 import os
+import sys
 
 # Load environment variables from .env file
 load_dotenv()
@@ -28,7 +29,10 @@ async def chat_with_bot(user_input: str):
 async def main():
     print("Simple Chatbot (Type 'exit' to quit)")
     while True:
-        user_input = input("You: ")
+        if sys.stdin.isatty():
+            user_input = input("You: ")
+        else:
+            user_input = "default input"  # Provide a default input or handle differently
         if user_input.lower() == "exit":
             break
         response = await chat_with_bot(user_input)
