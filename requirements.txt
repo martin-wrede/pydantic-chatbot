@@ -12,4 +12,7 @@ anthropic>=0.49.0
 python-dotenv>=1.0.1
 
 # Botocore version compatible with aiobotocore
-botocore>=1.34.41,<1.34.70
+# botocore>=1.34.41,<1.34.70
+
+boto3==1.34.70
+botocore==1.34.70
