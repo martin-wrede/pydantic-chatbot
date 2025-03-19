@@ -1,3 +1,4 @@
+
 from pydantic_ai import Agent
 from pydantic import BaseModel, Field
 import asyncio
@@ -5,6 +6,8 @@ import openai
 from dotenv import load_dotenv
 import os
 import sys
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load environment variables from .env file
 load_dotenv()
@@ -25,18 +28,31 @@ async def chat_with_bot(user_input: str):
     result = await chat_agent.run(user_input)
     return result.data.response
 
-# Run chatbot in CLI mode
-async def main():
-    print("Simple Chatbot (Type 'exit' to quit)")
-    while True:
-        if sys.stdin.isatty():
-            user_input = input("You: ")
-        else:
-            user_input = "default input"  # Provide a default input or handle differently
-        if user_input.lower() == "exit":
-            break
-        response = await chat_with_bot(user_input)
-        print("Bot:", response)
+# Create FastAPI app
+app = FastAPI()
+
+# Allow CORS for all origins (for development purposes)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Define request and response models
+class ChatRequest(BaseModel):
+    user_input: str
+
+class ChatResponse(BaseModel):
+    response: str
+
+# Define API endpoint
+@app.post("/chat", response_model=ChatResponse)
+async def chat_endpoint(request: ChatRequest):
+    response = await chat_with_bot(request.user_input)
+    return ChatResponse(response=response)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
